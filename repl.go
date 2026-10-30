@@ -7,6 +7,12 @@ import (
 	"strings"
 )
 
+type cliCommand struct {
+	name        string
+	description string
+	callback    func() error
+}
+
 func cleanInput(text string) []string {
 
 	lowerResult := strings.ToLower(text)
@@ -16,6 +22,20 @@ func cleanInput(text string) []string {
 }
 
 func startRepl() {
+
+	mapping := map[string]cliCommand{
+		"exit": {
+			name:        "exit",
+			description: "Exit the Pokedex",
+			callback:    commandExit,
+		},
+		"help": {
+			name:        "help",
+			description: "Displays help options",
+			callback:    commandHelp,
+		},
+	}
+
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -23,18 +43,18 @@ func startRepl() {
 		scanner.Scan()
 		line := scanner.Text()
 		cleanInput := cleanInput(line)
-		fmt.Println("Your command was:", cleanInput[0])
+		if len(cleanInput) == 0 {
+			continue
+		}
+		x, exists := mapping[cleanInput[0]]
+		if exists {
+			err := x.callback()
+			fmt.Println(err)
+		} else {
+			fmt.Println("Unknown command")
+		}
+
+		//		fmt.Println("Your command was:", cleanInput[0])
 		continue
 	}
-	//	for scanner.Scan() {
-	//		fmt.Println("Pokedex >")
-	//		line := scanner.Text()
-	//		cleanInput := cleanInput(line)
-	//		fmt.Println("Your command was: ", cleanInput)
-	//		continue
-	//	}
-	//
-	//	if err := scanner.Err(); err != nil {
-	//		errors.New("Error reading input")
-	//	}
 }
