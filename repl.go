@@ -10,7 +10,11 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*config) error
+}
+
+type config struct {
+	state		string
 }
 
 func cleanInput(text string) []string {
@@ -21,7 +25,7 @@ func cleanInput(text string) []string {
 	return result
 }
 
-func startRepl() {
+func startRepl(state *config) {
 
 	mapping := map[string]cliCommand{
 		"exit": {
@@ -48,13 +52,17 @@ func startRepl() {
 		}
 		x, exists := mapping[cleanInput[0]]
 		if exists {
-			err := x.callback()
+			err := x.callback(state)
 			fmt.Println(err)
 		} else {
 			fmt.Println("Unknown command")
 		}
 
 		//		fmt.Println("Your command was:", cleanInput[0])
+		err := scanner.Err()
+		if err != nil {
+			fmt.Println("Something went way wrong...")
+		}
 		continue
 	}
 }

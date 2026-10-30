@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func commandHelp() error {
+func commandHelp(state *config) error {
 	helpText := `Welcome to the Pokedex!
 	usage:
 	
