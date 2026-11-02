@@ -17,20 +17,14 @@ type PokeLocations struct {
 	} `json:"results"`
 }
 
-func GetLocations(offset int) (PokeLocations, error) {
+// Takes a url from the state.Next/state.Previous container
+func GetLocations(endpoint string) (PokeLocations, error) {
 
 	// Hardcoded url for now, maybe pass in as variable later?
-	baseURL, err := url.Parse("https://pokeapi.co/api/v2/location-area/")
+	baseURL, err := url.Parse(endpoint)
 	if err != nil {
 		panic(err)
 	}
-
-	// Add the query parameter "offset" to paginate
-	params := url.Values{}
-	params.Add("offset", string(offset))
-
-	// Encode and attatch parameters to the URL
-	baseURL.RawQuery = params.Encode()
 
 	resp, err := http.Get(baseURL.String())
 	if err != nil {

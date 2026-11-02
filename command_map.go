@@ -8,7 +8,15 @@ import (
 )
 
 func commandMap(state *config) error {
-	x, _ := apiCalls.GetLocations(0)
-	fmt.Println(x.Results[0].Name)
+	x, _ := apiCalls.GetLocations(state.Next)
+
+	// Need all this for pretty printing, probably a better solution...
+	for _, loc := range x.Results[:len(x.Results)-1] {
+		fmt.Println(loc.Name)
+	}
+	fmt.Print(x.Results[len(x.Results)-1].Name)
+
+	state.Next = x.Next
+	state.Previous = x.Previous
 	return errors.New("")
 }

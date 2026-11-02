@@ -15,8 +15,8 @@ type cliCommand struct {
 
 type config struct {
 	state    string
-	Next     int
-	Previous int
+	Next     string
+	Previous string
 }
 
 func cleanInput(text string) []string {
@@ -44,6 +44,11 @@ func startRepl(state *config) {
 			name:        "map",
 			description: "Gets the 20 available locations",
 			callback:    commandMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Gets the previous 20 available locations",
+			callback:    commandMapb,
 		},
 	}
 
