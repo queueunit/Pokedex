@@ -7,7 +7,7 @@ import (
 	apiCalls "github.com/queueunit/Pokedex/internal/api"
 )
 
-func commandMapb(state *config) error {
+func commandMapb(state *config, opts ...string) error {
 	if state.Previous == "" {
 		fmt.Print("you're on the first page")
 		return errors.New("")

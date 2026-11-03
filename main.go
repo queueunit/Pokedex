@@ -9,7 +9,7 @@ import (
 func main() {
 	state := config{state: "begun",
 		Next:     "https://pokeapi.co/api/v2/location-area/",
-		Previous: "null",
+		Previous: "",
 		Cache:    pokecache.NewCache(time.Duration(60) * time.Second),
 	}
 	startRepl(&state)

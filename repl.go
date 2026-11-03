@@ -12,7 +12,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, ...string) error
 }
 
 type config struct {
@@ -53,6 +53,11 @@ func startRepl(state *config) {
 			description: "Gets the previous 20 available locations",
 			callback:    commandMapb,
 		},
+		"explore": {
+			name:        "explore",
+			description: "Takes a region name and returns the pokemon in that area",
+			callback:    commandExplore,
+		},
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -65,10 +70,17 @@ func startRepl(state *config) {
 		if len(cleanInput) == 0 {
 			continue
 		}
+
 		x, exists := mapping[cleanInput[0]]
 		if exists {
-			err := x.callback(state)
-			fmt.Println(err)
+			if len(cleanInput) > 1 {
+				//				fmt.Println("Variadic function call")
+				err := x.callback(state, cleanInput[0:]...)
+				fmt.Println(err)
+			} else {
+				err := x.callback(state, cleanInput[0])
+				fmt.Println(err)
+			}
 		} else {
 			fmt.Println("Unknown command")
 		}

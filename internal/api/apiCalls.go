@@ -9,15 +9,7 @@ import (
 	pokecache "github.com/queueunit/Pokedex/internal/cache"
 )
 
-type PokeLocations struct {
-	Count    int    `json:"count"`
-	Next     string `json:"next"`
-	Previous string `json:"previous"`
-	Results  []struct {
-		Name string `json:"name"`
-		URL  string `json:"url"`
-	} `json:"results"`
-}
+const locationAreaURL = "https://pokeapi.co/api/v2/location-area/"
 
 // Takes a url from the state.Next/state.Previous container
 func GetLocations(endpoint string, cache *pokecache.Cache) (PokeLocations, error) {
@@ -60,4 +52,47 @@ func GetLocations(endpoint string, cache *pokecache.Cache) (PokeLocations, error
 	cache.Add(endpoint, cachedResult)
 
 	return locations, errors.New("")
+}
+
+func GetDetailedLocation(loc string, cache *pokecache.Cache) (DetailedLocation, error) {
+
+	area := locationAreaURL + loc
+
+	cacheResponse, inCache := cache.Get(area)
+	if inCache {
+		//		fmt.Println("Found in cache") // For troubleshooting purposes
+		results := DetailedLocation{}
+		err := json.Unmarshal(cacheResponse, &results)
+		if err != nil {
+			return DetailedLocation{}, errors.New("Could not unmarshal cached data")
+		}
+	}
+
+	baseURL, err := url.Parse(area)
+	if err != nil {
+		panic(err)
+	}
+
+	resp, err := http.Get(baseURL.String())
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	var location DetailedLocation
+	decoder := json.NewDecoder(resp.Body)
+	err = decoder.Decode(&location)
+	if err != nil {
+		return DetailedLocation{}, errors.New("Invalid")
+	}
+
+	cachedResult, err := json.Marshal(location)
+	if err != nil {
+		return location, errors.New("can not cache results")
+	}
+
+	cache.Add(area, cachedResult)
+
+	return location, errors.New("")
 }

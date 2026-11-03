@@ -7,7 +7,7 @@ import (
 	apiCalls "github.com/queueunit/Pokedex/internal/api"
 )
 
-func commandMap(state *config) error {
+func commandMap(state *config, opts ...string) error {
 	x, _ := apiCalls.GetLocations(state.Next, state.Cache)
 
 	// Need all this for pretty printing, probably a better solution...
