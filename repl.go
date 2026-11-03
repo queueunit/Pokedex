@@ -65,6 +65,11 @@ func startRepl(state *config) {
 			description: "Attempts to catch a pokemon and add to the users collection",
 			callback:    commandCatch,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "Lists attributes of a pokemon currently in the Pokedex",
+			callback:    commandInspect,
+		},
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)

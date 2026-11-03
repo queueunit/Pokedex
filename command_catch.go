@@ -34,7 +34,7 @@ func commandCatch(state *config, opts ...string) error {
 		isCaught = true
 	}
 
-	fmt.Printf("Throwing a Pokeball at %v.\n", opts[1])
+	fmt.Printf("Throwing a Pokeball at %v...\n", opts[1])
 	time.Sleep(2 * time.Second)
 	if isCaught {
 		fmt.Printf("%v was caught!", opts[1])
