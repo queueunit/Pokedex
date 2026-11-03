@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	apiCalls "github.com/queueunit/Pokedex/internal/api"
 	pokecache "github.com/queueunit/Pokedex/internal/cache"
 )
 
@@ -20,6 +21,7 @@ type config struct {
 	Next     string
 	Previous string
 	Cache    *pokecache.Cache
+	Pokedex  map[string]apiCalls.Pokemon
 }
 
 func cleanInput(text string) []string {
@@ -57,6 +59,11 @@ func startRepl(state *config) {
 			name:        "explore",
 			description: "Takes a region name and returns the pokemon in that area",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Attempts to catch a pokemon and add to the users collection",
+			callback:    commandCatch,
 		},
 	}
 

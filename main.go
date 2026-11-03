@@ -3,6 +3,7 @@ package main
 import (
 	"time"
 
+	apiCalls "github.com/queueunit/Pokedex/internal/api"
 	pokecache "github.com/queueunit/Pokedex/internal/cache"
 )
 
@@ -11,6 +12,7 @@ func main() {
 		Next:     "https://pokeapi.co/api/v2/location-area/",
 		Previous: "",
 		Cache:    pokecache.NewCache(time.Duration(60) * time.Second),
+		Pokedex:  make(map[string]apiCalls.Pokemon),
 	}
 	startRepl(&state)
 }

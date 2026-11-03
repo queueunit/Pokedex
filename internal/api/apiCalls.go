@@ -10,6 +10,7 @@ import (
 )
 
 const locationAreaURL = "https://pokeapi.co/api/v2/location-area/"
+const pokemonURL = "https://pokeapi.co/api/v2/pokemon/"
 
 // Takes a url from the state.Next/state.Previous container
 func GetLocations(endpoint string, cache *pokecache.Cache) (PokeLocations, error) {
@@ -95,4 +96,47 @@ func GetDetailedLocation(loc string, cache *pokecache.Cache) (DetailedLocation, 
 	cache.Add(area, cachedResult)
 
 	return location, errors.New("")
+}
+
+func GetPokemon(pokemon string, cache *pokecache.Cache) (Pokemon, error) {
+
+	pokequery := pokemonURL + pokemon
+
+	cacheResponse, inCache := cache.Get(pokequery)
+	if inCache {
+		//		fmt.Println("Found in cache") // For troubleshooting purposes
+		results := Pokemon{}
+		err := json.Unmarshal(cacheResponse, &results)
+		if err != nil {
+			return Pokemon{}, errors.New("Could not unmarshal cached data")
+		}
+	}
+
+	baseURL, err := url.Parse(pokequery)
+	if err != nil {
+		panic(err)
+	}
+
+	resp, err := http.Get(baseURL.String())
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+
+	var p Pokemon
+	decoder := json.NewDecoder(resp.Body)
+	err = decoder.Decode(&p)
+	if err != nil {
+		return Pokemon{}, errors.New("Invalid")
+	}
+
+	cachedResult, err := json.Marshal(p)
+	if err != nil {
+		return p, errors.New("can not cache results")
+	}
+
+	cache.Add(pokequery, cachedResult)
+
+	return p, errors.New("")
 }
