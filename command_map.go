@@ -8,7 +8,7 @@ import (
 )
 
 func commandMap(state *config) error {
-	x, _ := apiCalls.GetLocations(state.Next)
+	x, _ := apiCalls.GetLocations(state.Next, state.Cache)
 
 	// Need all this for pretty printing, probably a better solution...
 	for _, loc := range x.Results[:len(x.Results)-1] {

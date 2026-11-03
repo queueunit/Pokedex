@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	pokecache "github.com/queueunit/Pokedex/internal/cache"
 )
 
 type cliCommand struct {
@@ -17,6 +19,7 @@ type config struct {
 	state    string
 	Next     string
 	Previous string
+	Cache    *pokecache.Cache
 }
 
 func cleanInput(text string) []string {

@@ -12,7 +12,7 @@ func commandMapb(state *config) error {
 		fmt.Print("you're on the first page")
 		return errors.New("")
 	}
-	x, _ := apiCalls.GetLocations(state.Previous)
+	x, _ := apiCalls.GetLocations(state.Previous, state.Cache)
 
 	// Need all this for pretty printing, probably a better solution...
 	for _, loc := range x.Results[:len(x.Results)-1] {
